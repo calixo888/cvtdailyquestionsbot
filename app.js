@@ -16,9 +16,9 @@ async function removeFirstLine() {
               data = data.substr(position + 1); // subtract string based on first line length
 
               fs.writeFile(questionsFilePath, data, function(err) { // write file
-                  if (err) { // if error, report
-                      console.log (err);
-                  }
+                if (err) { // if error, report
+                  console.log (err);
+                }
               });
           } else {
               console.log('no lines found');
@@ -43,19 +43,21 @@ async function getFirstLine(pathToFile) {
 }
 
 app.get("/", (req, res) => {
+  res.send("we be hackin' CVT")
+});
+
+app.post("/dailyquestion", (req, res) => {
   getFirstLine(questionsFilePath).then((line) => {
-    res.send(line)
+    res.send({
+      response_type: "in_channel",
+      text: line
+    });
+
     removeFirstLine();
   });
 });
 
-app.post("/dailyquestion", (req, res) => {
-  res.send({
-    response_type: "in_channel",
-    text: "yo wassup"
-  })
-});
-
-app.listen(3000, () => {
-  console.log("yeet");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("[+] Bot server is running...");
 });
